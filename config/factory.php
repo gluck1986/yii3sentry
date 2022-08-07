@@ -8,7 +8,7 @@ use Sentry\Transport\DefaultTransportFactory;
 use Sentry\Transport\TransportFactoryInterface;
 
 return [
-    \App\Infrastructure\Sentry\YiiSentryConfig::class    => [
+    \Webvork\Yii3\Sentry\YiiSentryConfig::class    => [
         '__construct()' => [
             'config' => $params['sentry'],
         ],
