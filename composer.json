@@ -42,7 +42,6 @@
             "source-directory": "config"
         },
         "config-plugin": {
-            "params": "params.php",
             "common": "factory.php",
             "events-console": "events-console.php",
             "events-web": "events.php",

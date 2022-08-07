@@ -55,8 +55,8 @@ or another config file with logger settings
 return [
     LoggerInterface::class => static function (
         /** your_another_log_target $your_log_target */
-        SentryBreadcrumbLogTarget $sentryLogTarget,
-        SentryTraceLogTarget $sentryTraceLogTarget
+        \Webvork\Yii3\Sentry\SentryBreadcrumbLogTarget $sentryLogTarget,
+        \Webvork\Yii3\Sentry\Tracing\SentryTraceLogTarget $sentryTraceLogTarget
     ) {
         return new Logger([
         /** $your_log_target */
@@ -85,6 +85,33 @@ add DB log decorator for tracing db queries in app/config/params.php
 ]
 ```
 
+add into app/config/params.php into middleware section  SetRequestIpMiddleware
+```php
+    'middlewares' => [
+        ErrorCatcher::class,
+        Webvork\Yii3\Sentry\Http\SetRequestIpMiddleware::class, //add this
+        Router::class,
+    ],
+```
+
+add into app/config/common/router.php tracing middleware
+```php
+  RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
+        $collector
+            ->middleware(FormatDataResponse::class)
+            ->middleware(JsonParseMiddleware::class)
+            ->middleware(ExceptionMiddleware::class)
+            ->middleware(\Webvork\Yii3\Sentry\Tracing\SentryTraceMiddleware::class) // add this
+            ->addGroup(
+                Group::create('')
+                    ->routes(...$config->get('routes'))
+            );
+
+        return new RouteCollection($collector);
+    },
+ ```
+
+________
 
 if you want to trace guzzle requests and add sentry headers to external queries, add this into your config\httpClient.php
 or into another factories config file
