@@ -34,7 +34,7 @@ final class HubBootstrapper
 
     public function bootstrap(): void
     {
-        $this->options->setIntegrations([$this, 'prepareIntegrations']);
+        $this->options->setIntegrations(fn(array $integrations) => $this->prepareIntegrations($integrations));
 
         $clientBuilder = new ClientBuilder($this->options);
         $clientBuilder
